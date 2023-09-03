@@ -92,6 +92,9 @@ Detailed instructions for setting up the database can be found in the `database-
 
 - Explore the analytics page to visualize some sample trends in the data.
 
+## Architectual Diagrams
+You can see the diagrams of how system works currently and the ideal solution on `diagrams/` folder.
+
 ## Acknowledgments
 
 - This project was a take home test which took 17 hours in total to research and develop.
