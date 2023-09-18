@@ -104,7 +104,6 @@ if (!isMainThread) {
                             `Error inserting ${row['Job ID']}:`,
                             error
                         );
-                        die();
                     }
                 }
             });
