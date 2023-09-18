@@ -1,4 +1,5 @@
 const fs = require('fs');
+const db = require('./modules/db');
 const csvParser = require('csv-parser');
 const {
     Worker,
@@ -6,23 +7,17 @@ const {
     parentPort,
     workerData,
 } = require('worker_threads');
-const pgp = require('pg-promise')();
+const { DB_SCHEMA } = require('./modules/config');
 let activeWorkers = 0;
 
-const connectionString = 'postgresql://postgres@localhost:5432/postgres';
-const db = pgp({
-    connectionString,
-    max: 20,
-});
-
-const schemaName = 'jobs';
+const schemaName = DB_SCHEMA;
 
 async function createDatabaseAndTable() {
     try {
         await db.none(`CREATE SCHEMA ${schemaName}`);
         console.log(`Schema ${schemaName} created.`);
     } catch (error) {
-        console.error(`Error creating schema ${schemaName}:`, error);
+        console.error(`Schema ${schemaName} seems to be existed`);
     }
 
     try {
@@ -48,7 +43,7 @@ async function createDatabaseAndTable() {
         annual_salary_min NUMERIC(10, 2),
         annual_salary_max NUMERIC(10, 2),
         number_of_hires_calc VARCHAR(10),
-        job_title VARCHAR(250),
+        job_title TEXT,
         industry VARCHAR(50),
         zip_code VARCHAR(10),
         city VARCHAR(50),
@@ -78,7 +73,7 @@ if (isMainThread) {
     createDatabaseAndTable();
     let readRecords = 0;
 
-    const batchSize = 10000;
+    const batchSize = 20000;
     let batch = [];
 
     // Read CSV file and insert data using worker threads
